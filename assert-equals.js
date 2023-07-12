@@ -40,7 +40,7 @@ function assertEquals(expect, actual) {
         Array.isArray(expect) && actual === null ||
         Array.isArray(actual) && expect === null
         ) {
-        throw new Error(`Expected type ${typeof expect === null ? 'object (null)' : 'object (array)'} but found type ${typeof actual === null ? 'object (null)' : 'object (array)'}`);
+        throw new Error(`Expected type ${typeof expect === null ? 'object (null)' : 'object (array)'} but found type ${typeof actual === null ? 'object (array)' : 'object (null)'}`);
     };
 
     function comparePrimitives(first, second) {
@@ -64,7 +64,5 @@ function assertEquals(expect, actual) {
 
     comparePrimitives(expect, actual);
 }
-
-assertEquals(['a', 'b'], ['a', 'd']);
 
 module.exports = assertEquals
