@@ -18,6 +18,10 @@ function assertEquals(expect, actual) {
     Array.from(arguments).forEach(arg => {
         if (Array.isArray(arg)) {
             arg.forEach((element) => checkUnsupported(element));
+        } else if (typeof arg === 'object' && arg !== null) {
+            for (let key in arg) {
+                checkUnsupported(arg[key]);
+            };
         } else {
             checkUnsupported(arg);
         };
@@ -27,20 +31,25 @@ function assertEquals(expect, actual) {
         if (
             typeof expect === 'undefined' && actual === null ||
             typeof actual === 'undefined' && expect === null
-            ) {
+        ) {
             throw new Error(`You are comparing ${typeof expect === 'undefined' ? 'undefined (expect)' : 'null (expect)'} 
             with ${typeof actual === 'undefined' ? 'undefined (actual)' : 'null (actual)'}`);
         } else {
             throw new Error(`Expected type ${typeof expect} but found type ${typeof actual}`);
         };
     };
-    
-    
+
+    // objects, arrays and nulls
+    // case 1: one is array, the other should be as well
+    // case 2: one is object, the other should be as well but not null
     if (
-        Array.isArray(expect) && actual === null ||
-        Array.isArray(actual) && expect === null
-        ) {
-        throw new Error(`Expected type ${typeof expect === null ? 'object (null)' : 'object (array)'} but found type ${typeof actual === null ? 'object (array)' : 'object (null)'}`);
+        Array.isArray(expect) && !Array.isArray(actual) ||
+        Array.isArray(actual) && !Array.isArray(expect)
+    ) {
+        throw new Error(`Expected type ${Array.isArray(expect) ? 'object (array)' : 'object'} but found type ${Array.isArray(actual) ? 'object (array)' : 'object'}`);
+    } else if (typeof expect === 'object' && expect !== null && actual === null ||
+        typeof actual === 'object' && actual !== null && expect === null) {
+            throw new Error(`Expected type ${typeof expect === 'object' ? 'object' : 'null'} but found type ${typeof actual === 'object' ? 'object' : 'null'}`);
     };
 
     function comparePrimitives(first, second) {
@@ -57,6 +66,17 @@ function assertEquals(expect, actual) {
         } else {
             for (let i = 0; i < expect.length; i++) {
                 comparePrimitives(expect[i], actual[i]);
+            };
+        };
+        return;
+    };
+    
+    if (typeof expect === 'object' && expect !== null && typeof actual === 'object' && actual !== null) {
+        if (Object.keys(expect).length !== Object.keys(actual).length) {
+            throw new Error(`Expected ${Object.keys(expect).length} properties but found ${Object.keys(actual).length}`);
+        } else {
+            for (let key in expect) {
+                comparePrimitives(expect[key], actual[key]);
             };
         };
         return;

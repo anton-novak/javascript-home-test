@@ -6,10 +6,11 @@ describe('assertEquals', () => {
       expect(() => assertEquals()).toThrow('missing');
       expect(() => assertEquals(1)).toThrow('missing');
     })
-    it('given unsupported arguments (non-primitives excl. simple arrays)', () => {
-      expect(() => assertEquals({ a: 1 }, 1)).toThrow('unsupported');
-      expect(() => assertEquals({ a: 1 }, { b: 2 })).toThrow('unsupported');
+    it('given unsupported arguments (functions, nested arrays and objects)', () => {
+      // expect(() => assertEquals({ a: 1 }, 1)).toThrow('unsupported');
+      // expect(() => assertEquals({ a: 1 }, { b: 2 })).toThrow('unsupported');
       expect(() => assertEquals([1, { a: 1 }], 3)).toThrow('unsupported');
+      expect(() => assertEquals({ a: 1, b: [1] }, 3)).toThrow('unsupported');
       expect(() => assertEquals(4, () => undefined)).toThrow('unsupported');
     })
   })
@@ -28,17 +29,23 @@ describe('assertEquals', () => {
       expect(() => assertEquals(null, null)).not.toThrow()
       expect(() => assertEquals(undefined, undefined)).not.toThrow()
     })
-    it('array', () => {
+    it('simple array', () => {
       expect(() => assertEquals([1, 2, 3], [1, 2, 3])).not.toThrow()
+    })
+    it('simple object', () => {
+      expect(() => assertEquals({ a: 1, b: 2}, { a: 1, b: 2})).not.toThrow();
     })
   })
 
   describe('throws an error when expected and actual are different:', () => {
-    it('types (with a type message)', () => {
+    it('types where one is primitive type (with a type message)', () => {
       expect(() => assertEquals(1, 'hello')).toThrow('Expected type');
+      expect(() => assertEquals(1, [1])).toThrow('Expected type');
     })
-    it('types (for arrays and nulls)', () => {
+    it('types (for objects, arrays and nulls)', () => {
       expect(() => assertEquals([1, 2, 3], null)).toThrow('Expected type');
+      expect(() => assertEquals([1, 2, 3], { a: 1 })).toThrow('Expected type');
+      expect(() => assertEquals(null, { a: 1 })).toThrow('Expected type');
     })
     it('numbers', () => {
       expect(() => assertEquals(3, 11)).toThrow()
@@ -49,15 +56,22 @@ describe('assertEquals', () => {
     it('booleans', () => {
       expect(() => assertEquals(true, false)).toThrow()
     })
-    it('arrays', () => {
+    it('simple arrays', () => {
       expect(() => assertEquals([1, 2, 3], [1, 2, 3, 4])).toThrow()
       expect(() => assertEquals([1, 2, 3], ['a', 'b', 'c'])).toThrow()
     })
+    it('simple object', () => {
+      expect(() => assertEquals({ a: 1, b: 2}, { a: 1, b: 3})).toThrow();
+      expect(() => assertEquals({ a: 1, b: 2}, { a: 1, b: 2, c: 3})).toThrow();
+    })
   })
 
-  describe('if arrays are compared', () => {
-    it('throws a specific error re length', () => {
+  describe('if arrays or objects are compared', () => {
+    it('throws a specific error re length of arrays', () => {
       expect(() => assertEquals([1, 2, 3], ['a', 'b', 'c', 'd'])).toThrow('length')
+    })
+    it('throws a specific error re number of properties of objects', () => {
+      expect(() => assertEquals({ a: 1, b: 2 }, { a: 1, b: 2, c: 3})).toThrow('properties');
     })
   })
 
