@@ -8,9 +8,6 @@ function assertEquals(expect, actual) {
     };
 
     function checkUnsupported(arg) {
-        // if (typeof arg === 'object' && arg !== null) {
-        //     throw new Error(`Argument ${arg} of type ${typeof arg} unsupported`);
-        // };
         if (typeof arg === 'function') {
             throw new Error(`Argument ${arg} of type ${typeof arg} unsupported`);
         };
