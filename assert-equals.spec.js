@@ -28,7 +28,7 @@ describe('assertEquals', () => {
       expect(() => assertEquals(null, null)).not.toThrow()
       expect(() => assertEquals(undefined, undefined)).not.toThrow()
     })
-    it('array', () => {
+    it('simple array', () => {
       expect(() => assertEquals([1, 2, 3], [1, 2, 3])).not.toThrow()
     })
   })
@@ -49,7 +49,7 @@ describe('assertEquals', () => {
     it('booleans', () => {
       expect(() => assertEquals(true, false)).toThrow()
     })
-    it('arrays', () => {
+    it('simple arrays', () => {
       expect(() => assertEquals([1, 2, 3], [1, 2, 3, 4])).toThrow()
       expect(() => assertEquals([1, 2, 3], ['a', 'b', 'c'])).toThrow()
     })
