@@ -1,4 +1,5 @@
 function assertEquals(expect, actual) {
+    
     if (arguments.length === 1) {
         throw new Error('Actual value to compare missing in the arguments');
     };
@@ -7,9 +8,9 @@ function assertEquals(expect, actual) {
     };
 
     function checkUnsupported(arg) {
-        if (typeof arg === 'object' && arg !== null) {
-            throw new Error(`Argument ${arg} of type ${typeof arg} unsupported`);
-        };
+        // if (typeof arg === 'object' && arg !== null) {
+        //     throw new Error(`Argument ${arg} of type ${typeof arg} unsupported`);
+        // };
         if (typeof arg === 'function') {
             throw new Error(`Argument ${arg} of type ${typeof arg} unsupported`);
         };
@@ -65,7 +66,7 @@ function assertEquals(expect, actual) {
             throw new Error(`Expected array length ${expect.length} but found ${actual.length}`);
         } else {
             for (let i = 0; i < expect.length; i++) {
-                comparePrimitives(expect[i], actual[i]);
+                assertEquals(expect[i], actual[i]);
             };
         };
         return;
@@ -76,7 +77,7 @@ function assertEquals(expect, actual) {
             throw new Error(`Expected ${Object.keys(expect).length} properties but found ${Object.keys(actual).length}`);
         } else {
             for (let key in expect) {
-                comparePrimitives(expect[key], actual[key]);
+                assertEquals(expect[key], actual[key]);
             };
         };
         return;

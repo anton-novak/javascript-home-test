@@ -7,10 +7,6 @@ describe('assertEquals', () => {
       expect(() => assertEquals(1)).toThrow('missing');
     })
     it('given unsupported arguments (functions, nested arrays and objects)', () => {
-      // expect(() => assertEquals({ a: 1 }, 1)).toThrow('unsupported');
-      // expect(() => assertEquals({ a: 1 }, { b: 2 })).toThrow('unsupported');
-      expect(() => assertEquals([1, { a: 1 }], 3)).toThrow('unsupported');
-      expect(() => assertEquals({ a: 1, b: [1] }, 3)).toThrow('unsupported');
       expect(() => assertEquals(4, () => undefined)).toThrow('unsupported');
     })
   })
@@ -33,8 +29,24 @@ describe('assertEquals', () => {
       expect(() => assertEquals([1, 2, 3], [1, 2, 3])).not.toThrow()
     })
     it('simple object', () => {
-      expect(() => assertEquals({ a: 1, b: 2}, { a: 1, b: 2})).not.toThrow();
+      expect(() => assertEquals({ a: 1, b: 2 }, { a: 1, b: 2 })).not.toThrow();
     })
+    it('nested object (or array)', () => {
+      expect(() => assertEquals(
+        {
+          a: 1,
+          b: {
+            c: 3
+          }
+        },
+        {
+          a: 1,
+          b: {
+            c: 3
+          }
+        })).not.toThrow();
+    })
+    expect(() => assertEquals({ a: 1, b: [2] }, { a: 1, b: [2] })).not.toThrow();
   })
 
   describe('throws an error when expected and actual are different:', () => {
@@ -61,9 +73,26 @@ describe('assertEquals', () => {
       expect(() => assertEquals([1, 2, 3], ['a', 'b', 'c'])).toThrow()
     })
     it('simple object', () => {
-      expect(() => assertEquals({ a: 1, b: 2}, { a: 1, b: 3})).toThrow();
-      expect(() => assertEquals({ a: 1, b: 2}, { a: 1, b: 2, c: 3})).toThrow();
+      expect(() => assertEquals({ a: 1, b: 2 }, { a: 1, b: 3 })).toThrow();
+      expect(() => assertEquals({ a: 1, b: 2 }, { a: 1, b: 2, c: 3 })).toThrow();
     })
+    it('nested object (or array)', () => {
+      expect(() => assertEquals(
+        {
+          a: 1,
+          b: {
+            c: 3
+          }
+        },
+        {
+          a: 1,
+          b: {
+            c: 4
+          }
+        })).toThrow();
+    })
+    expect(() => assertEquals({ a: 1, b: [2] }, { a: 1, b: [3] })).toThrow();
+    expect(() => assertEquals({ a: 1, b: { c: [3] } }, { a: 1, b: {c : [4] }})).toThrow();
   })
 
   describe('if arrays or objects are compared', () => {
@@ -71,7 +100,7 @@ describe('assertEquals', () => {
       expect(() => assertEquals([1, 2, 3], ['a', 'b', 'c', 'd'])).toThrow('length')
     })
     it('throws a specific error re number of properties of objects', () => {
-      expect(() => assertEquals({ a: 1, b: 2 }, { a: 1, b: 2, c: 3})).toThrow('properties');
+      expect(() => assertEquals({ a: 1, b: 2 }, { a: 1, b: 2, c: 3 })).toThrow('properties');
     })
   })
 
